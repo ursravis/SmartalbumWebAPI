@@ -59,7 +59,7 @@ namespace SmartalbumWebAPI.Controllers
             }
             return currentProject;
         }
-        public string ToBase64String(Image bmp)
+        private string ToBase64String(Image bmp)
         {
             string base64String = string.Empty;
             MemoryStream memoryStream = null;
@@ -84,7 +84,7 @@ namespace SmartalbumWebAPI.Controllers
 
             return base64String;
         }
-        Size GetThumbnailSize(Image original)
+        private Size GetThumbnailSize(Image original)
         {
             // Maximum size of any dimension.
             const int maxPixels = 64;
