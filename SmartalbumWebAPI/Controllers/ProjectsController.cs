@@ -36,8 +36,8 @@ namespace SmartalbumWebAPI.Controllers
                 {
                     foreach (var image in currentProject.Images)
                     {
-                        if (String.IsNullOrEmpty(image.ThumbnailSrc))
-                        {
+                        //if (String.IsNullOrEmpty(image.ThumbnailSrc))
+                        //{
                             var test = image.ImageSrc.Replace("data:image/jpeg;base64,", string.Empty).Replace("data:image/png;base64,", string.Empty);
                             byte[] bytes = Convert.FromBase64String(test);
                             using (MemoryStream ms = new MemoryStream(bytes))
@@ -52,7 +52,7 @@ namespace SmartalbumWebAPI.Controllers
 
                                 }
                             }
-                        }
+                        //}
                     }
                     SaveProjects(projects);
                 }
