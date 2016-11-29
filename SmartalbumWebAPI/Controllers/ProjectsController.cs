@@ -38,7 +38,7 @@ namespace SmartalbumWebAPI.Controllers
                     {
                         //if (String.IsNullOrEmpty(image.ThumbnailSrc))
                         //{
-                            var test = image.ImageSrc.Replace("data:image/jpeg;base64,", string.Empty).Replace("data:image/png;base64,", string.Empty);
+                            var test =  image.ImageSrc.Replace("data:image/jpeg;base64,", string.Empty).Replace("data:image/png;base64,", string.Empty).Replace("data:image/gif;base64,", string.Empty);
                             byte[] bytes = Convert.FromBase64String(test);
                             using (MemoryStream ms = new MemoryStream(bytes))
                             {
@@ -46,7 +46,7 @@ namespace SmartalbumWebAPI.Controllers
                                 {
                                    var size= GetThumbnailSize(bmp);
                                     var thumImage= bmp.GetThumbnailImage(size.Width, size.Height, null, IntPtr.Zero);
-                                    var thumbSrc = "data:image/jpeg;base64," + ToBase64String(thumImage);
+                                    var thumbSrc = "data:"+image.ImageType+";base64," + ToBase64String(thumImage,image.ImageType);
                               
                                     image.ThumbnailSrc= thumbSrc;
 
@@ -59,7 +59,22 @@ namespace SmartalbumWebAPI.Controllers
             }
             return currentProject;
         }
-        private string ToBase64String(Image bmp)
+        private ImageFormat GetImageFormat(string imageType)
+        {
+            var imgType = ImageFormat.Jpeg;
+            switch (imageType)
+            {
+                case "image/png":
+                    imgType = ImageFormat.Png;
+                    break;
+                case "image/Gif":
+                    imgType = ImageFormat.Gif;
+                    break;
+            }
+            return imgType;
+        }
+        
+        private string ToBase64String(Image bmp,string imageType)
         {
             string base64String = string.Empty;
             MemoryStream memoryStream = null;
@@ -67,7 +82,8 @@ namespace SmartalbumWebAPI.Controllers
             try
             {
                 memoryStream = new MemoryStream();
-                bmp.Save(memoryStream, ImageFormat.Jpeg);
+
+                bmp.Save(memoryStream, GetImageFormat(imageType));
             }
             catch (Exception exc)
             {
@@ -191,5 +207,6 @@ namespace SmartalbumWebAPI.Controllers
         public string ImageSrc { get; set; }
         public string ThumbnailSrc { get; set; }
         public int ImageId { get; set; }
+        public string ImageType { get; set; }
     }
 }
